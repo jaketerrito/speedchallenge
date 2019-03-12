@@ -29,3 +29,4 @@ Then, use our output from the discriminator and normalize it somehow and then ge
 
 Train it with one frame from the future
 Use an Autoencoder to predict the next frame for test file
+asdf
