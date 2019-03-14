@@ -12,17 +12,17 @@ A Generator that produces sets of training features and labels
 '''
 def data_generator(video, speeds, batch_size, sequence_length):
 	while True:
-		x = []
-		y = []
-		while len(x) < batch_size:
-			frame_num = random.randrange(sequence_length,len(video))
-
+		sequences = []
+		speed_vals = []
+		next_frames = []
+		while len(sequences) < batch_size:
+			frame_num = random.randrange(sequence_length,len(video)-1)
 			sequence = video[frame_num-sequence_length:frame_num]
+			next_frame = video[frame_num+1]
 			'''
 			flip = random.choice([True,False])
 			angle = random.uniform(-20,20)
 			scale = random.uniform(.8,1.2)
-			
 			for i, image in enumerate(sequence):
 				# Augmentation
 				image = skimage.transform.rescale(image, scale=scale)
@@ -31,14 +31,13 @@ def data_generator(video, speeds, batch_size, sequence_length):
 
 				# Really need to see the types of values before we add this noise
 				image = image + np.random.normal(scale=.5,size=image.shape)
-
-				#normalize input!
-				image = image / 255
+				
 				sequence[i] = image
 			'''
-			x.append(sequence)
-			y.append(speeds[frame_num])
-		yield np.array(x), np.array(y)
+			sequences.append(sequence)
+			speed_vals.append(speeds[frame_num])
+			next_frames.append(next_frame)
+		yield np.array(sequences), [np.array(next_frames), np.array(speed_vals)]
 
 def prediction_generator(video, sequence_length):
 	i = 0
